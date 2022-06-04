@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  app:
+    image:  nginx:${APP_IMAGE_VERSION}
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - ${APP_PORT}:80
+    volumes:
+      - app_source:/var/www/html
+      - app_logs:/var/log/nginx
+  db:
+    image: mysql:${MYSQL_IMAGE_VERSION}
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD:  ${DB_USER_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/mysql
+
+volumes:
+  db_volume:  
+    driver: local
+    driver_opts:
+      type: nfs
+      o: bind
+      device: "${DOCKER_VOLUMES_DATA}/${APP_NAME}/db_volume"
+  app_source:  
+    driver: local
+    driver_opts:
+      type: nfs
+      o: bind
+      device: "${DOCKER_VOLUMES_DATA}/${APP_NAME}/app_source"
