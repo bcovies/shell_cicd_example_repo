@@ -36,3 +36,10 @@ volumes:
       type: nfs
       o: bind
       device: "${DOCKER_VOLUMES_DATA}/${APP_NAME}/app_source"
+  app_logs:  
+    driver: local
+    driver_opts:
+      type: nfs
+      o: bind
+      device: "${DOCKER_VOLUMES_LOGS}/${APP_NAME}/app_logs"
+      
